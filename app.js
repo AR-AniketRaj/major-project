@@ -50,7 +50,7 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now()) + 7 * 24 * 60 * 60 * 1000,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
     },
@@ -67,8 +67,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser);
-passport.deserializeUser(User.deserializeUser);
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
@@ -78,22 +78,22 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/demouser", async (req, res) => {
-    try{
+// app.get("/demouser", async (req, res) => {
+//     try{
       
-         let fakeUser = new User({
-        email: "student@gmail.com",
-        username: "@delta-student"
-    });
+//          let fakeUser = new User({
+//         email: "student@gmail.com",
+//         username: "@delta-student"
+//     });
 
-    let registeredUser = await User.register(fakeUser, "helloworld");
-    res.send(registeredUser);
-    } catch(err) {
-        console.log("Real error", err);
-        res.send(err.message);
-    }
+//     let registeredUser = await User.register(fakeUser, "helloworld");
+//     res.send(registeredUser);
+//     } catch(err) {
+//         console.log("Real error", err);
+//         res.send(err.message);
+//     }
    
-});
+// });
 
 
 
