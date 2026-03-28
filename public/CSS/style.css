@@ -35,8 +35,10 @@ body {
 .f-info-links a:hover {
     text-decoration: underline;
 }
- 
-.f-info-links, .f-info-socials, .f-info-brand{
+
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
     width: 100%;
     display: flex;
     align-items: center;
@@ -91,7 +93,7 @@ body {
 
 .card-img-overlay:hover {
     opacity: 0.2;
-    background-color: white;   
+    background-color: white;
 }
 
 /* New page */
@@ -105,4 +107,10 @@ body {
 
 .show-img {
     height: 30vh;
+}
+
+/* Map */
+#map {
+    height: 400px;
+    width: 100%;
 }
