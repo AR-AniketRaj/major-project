@@ -1,8 +1,11 @@
 const Listing = require("../models/listing.js");
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res, next) => {
-   const allListings = await Listing.find({});
-   res.render("listings/index.ejs", { allListings });
+    const allListings = await Listing.find({});
+    res.render("listings/index.ejs", { allListings });
 }
 
 module.exports.renderNewForm = (req, res) => {
@@ -11,14 +14,14 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.showListing = async (req, res, next) => {
     let { id } = req.params;
-    const listing = await Listing.findById( id ).populate({
-       path: "reviews",
-       populate: {
-        path: "author",
-       },
+    const listing = await Listing.findById(id).populate({
+        path: "reviews",
+        populate: {
+            path: "author",
+        },
     })
-    .populate("owner");
-    if(!listing) {
+        .populate("owner");
+    if (!listing) {
         req.flash("error", "Listing you requested for does not exist!");
         return res.redirect("/listings");
     }
@@ -27,13 +30,29 @@ module.exports.showListing = async (req, res, next) => {
 };
 
 
-module.exports.createListing = async(req, res) => {
+module.exports.createListing = async (req, res) => {
+    let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+    }).send();
+
+
+    if (!response.body.features.length) {
+        req.flash("error", "Location not found!");
+        return res.redirect("/listings/new");
+    }
+
     let url = req.file.path;
     let filename = req.file.filename;
-    const newListing =  new Listing(req.body.listing);
+    const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
-    newListing.image = {url, filename};
-    await newListing.save();
+    newListing.image = { url, filename };
+
+    newListing.geometry = response.body.features[0].geometry.coordinates;
+
+    let savedListing = await newListing.save();
+    console.log(savedListing);
+
     req.flash("success", "New Listing Created!");
     res.redirect("/listings");
 };
@@ -42,7 +61,7 @@ module.exports.createListing = async(req, res) => {
 module.exports.renderEditForm = async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
-     if(!listing) {
+    if (!listing) {
         req.flash("error", "Listing you requested for does not exist!");
         return res.redirect("/listings");
     }
@@ -55,15 +74,15 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateListing = async (req, res) => {
 
     let { id } = req.params;
-    let updatedData = await Listing.findByIdAndUpdate(id, {...req.body.listing});
-    
-    if(typeof req.file !== "undefined") {
-       let url = req.file.path;
-       let filename = req.file.filename;
-       updatedData.image = { url, filename };
-       await updatedData.save();
+    let updatedData = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+    if (typeof req.file !== "undefined") {
+        let url = req.file.path;
+        let filename = req.file.filename;
+        updatedData.image = { url, filename };
+        await updatedData.save();
     }
-    
+
 
     req.flash("success", "Updated Successfully!");
     res.redirect(`/listings/${id}`);
