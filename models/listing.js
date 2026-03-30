@@ -27,8 +27,6 @@ const listingSchema = new Schema({
         ref: "User",
     },
     geometry: {
-        name: String,
-        location: {
             type: {
                 type: String, // Don't do `{ location: { type: String } }`
                 enum: ['Point'], // 'location.type' must be 'Point'
@@ -39,7 +37,6 @@ const listingSchema = new Schema({
                 required: true
             },
         },
-    },
 });
 
 
