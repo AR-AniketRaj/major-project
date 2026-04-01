@@ -51,7 +51,7 @@ const sampleListings = [
     title: "Secluded Treehouse Getaway",
     description:
       "Live among the treetops in this unique treehouse retreat. A true nature lover's paradise.",
-    image:{
+    image: {
       filename: "listingimage",
       url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
     },
@@ -99,7 +99,7 @@ const sampleListings = [
     title: "Ski-In/Ski-Out Chalet",
     description:
       "Hit the slopes right from your doorstep in this ski-in/ski-out chalet in the Swiss Alps.",
-    
+
     image: {
       filename: "listingimage",
       url: "https://images.unsplash.com/photo-1502784444187-359ac186c5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNreSUyMHZhY2F0aW9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
